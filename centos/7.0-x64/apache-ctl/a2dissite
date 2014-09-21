@@ -1,0 +1,26 @@
+#!/bin/bash
+AVAIL=/etc/httpd/sites-available/$1.conf
+ENABLED=/etc/httpd/sites-enabled
+SITE_AVAIL=`ls /etc/httpd/sites-available/`
+SITE_ENABLED=`ls /etc/httpd/sites-enabled/`
+
+if [ "$#" != "1" ]; then
+    echo "Use script: a2dissite virtual_site"
+    echo -e "\nAvailable virtual hosts: \n$SITE_AVAIL"
+    echo -e "\nEnabled virtual hosts: \n$SITE_ENABLED"
+    exit 0
+else
+    if test -e $AVAIL; then
+        rm $AVAIL
+    else
+        echo -e "$AVAIL virtual host does not exist! Exiting!"
+        exit 0
+    fi
+
+    if test -e $ENABLED/$1.conf; then
+        echo "Error!! Could not remove $AVAIL virtual host!"
+    else
+        echo  -e "Success! $AVAIL has been removed!\nPlease restart Apache: sudo systemctl restart httpd"
+        exit 0
+    fi
+fi
